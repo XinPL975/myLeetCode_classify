@@ -9,6 +9,7 @@
 输入: 1->1->2->3->3
 输出: 1->2->3
 
+法一：迭代
 class Solution {
     public ListNode deleteDuplicates(ListNode head) {
        if(head==null ||head.next==null) return head;
@@ -21,5 +22,14 @@ class Solution {
           }
        }
        return head;
+    }
+}
+
+法二：递归
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+       if(head==null ||head.next==null) return head;
+       head.next=deleteDuplicates(head.next);
+       return (head.val==head.next.val)?head.next:head;
     }
 }
