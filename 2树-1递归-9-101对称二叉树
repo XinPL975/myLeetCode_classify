@@ -1,0 +1,35 @@
+给定一个二叉树，检查它是否是镜像对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null || (root.left==null && root.right==null)) return true;                 //注意：这两行初始情况也可以只写成 if(root==null) return true;
+        if(root.left==null || root.right==null || root.left.val!=root.right.val) return false;
+        return isSymmetric(root.left,root.right);
+    }
+
+    boolean isSymmetric(TreeNode root1,TreeNode root2){
+        if(root1==null && root2==null) return true;
+        if(root1==null || root2==null) return false;
+        if(root1.val!=root2.val) return false;
+        return isSymmetric(root1.left,root2.right) && isSymmetric(root1.right,root2.left);
+
+
+    }
+}
