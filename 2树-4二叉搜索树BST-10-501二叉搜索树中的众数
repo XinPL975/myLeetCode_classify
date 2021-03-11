@@ -1,0 +1,59 @@
+给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+
+假定 BST 有如下定义：
+
+结点左子树中所含结点的值小于等于当前结点的值
+结点右子树中所含结点的值大于等于当前结点的值
+左子树和右子树都是二叉搜索树
+例如：
+给定 BST [1,null,2,2],
+
+   1
+    \
+     2
+    /
+   2
+返回[2].
+
+提示：如果众数超过1个，不需考虑输出顺序
+
+class Solution {
+    List<Integer> list=new ArrayList<>();
+    int maxnum=1;
+    int currnum=1;
+    TreeNode prev=null;
+    public int[] findMode(TreeNode root) {
+        traverse(root);
+        int size=list.size();
+        int[] res=new int[size];
+        for(int i=0;i<res.length;i++){
+            res[i]=list.get(i);
+        }
+        return res;
+    
+    }
+
+    void traverse(TreeNode root){
+        if(root==null) return;
+        traverse(root.left);
+        if(prev!=null){
+            if(root.val==prev.val){
+                currnum++;
+            }else{
+                currnum=1;
+            }
+            
+        }
+        if(maxnum<currnum){               //注意：两个if循环之间是可以并列的关系！且并列写可以考虑到只有一个节点的特殊情况！！理解
+            maxnum=currnum;
+            list.clear();
+            list.add(root.val);
+        }else if(maxnum==currnum){
+            list.add(root.val);
+        }
+        prev=root;
+        traverse(root.right);
+
+
+    }
+}
