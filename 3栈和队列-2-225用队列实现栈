@@ -1,0 +1,145 @@
+请你仅使用两个队列实现一个后入先出（LIFO）的栈，并支持普通队列的全部四种操作（push、top、pop 和 empty）。
+
+实现 MyStack 类：
+
+void push(int x) 将元素 x 压入栈顶。
+int pop() 移除并返回栈顶元素。
+int top() 返回栈顶元素。
+boolean empty() 如果栈是空的，返回 true ；否则，返回 false 。
+ 
+注意：
+
+你只能使用队列的基本操作 —— 也就是 push to back、peek/pop from front、size 和 is empty 这些操作。
+你所使用的语言也许不支持队列。 你可以使用 list （列表）或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。
+ 
+示例：
+
+输入：
+["MyStack", "push", "push", "top", "pop", "empty"]
+[[], [1], [2], [], [], []]
+输出：
+[null, null, null, 2, 2, false]
+
+解释：
+MyStack myStack = new MyStack();
+myStack.push(1);
+myStack.push(2);
+myStack.top(); // 返回 2
+myStack.pop(); // 返回 2
+myStack.empty(); // 返回 False
+ 
+提示：
+
+1 <= x <= 9
+最多调用100 次 push、pop、top 和 empty
+每次调用 pop 和 top 都保证栈不为空
+
+法一：这种方法有点傻 但好在性能与法二差不多 且只使用了一个队列
+class MyStack {
+
+    Queue<Integer> queue=new LinkedList<>();
+    int count=0;
+    /** Initialize your data structure here. */
+    public MyStack() {
+
+    }
+    
+    /** Push element x onto stack. */
+    public void push(int x) {
+        queue.offer(x);
+        count++;
+
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        for(int i=0;i<count-1;i++){
+            queue.offer(queue.poll());
+        }
+        count--;
+        return queue.poll();
+        
+    }
+    
+    /** Get the top element. */
+    public int top() {
+        for(int i=0;i<count-1;i++){
+            queue.offer(queue.poll());
+        }
+        int res=queue.peek();
+        queue.offer(queue.poll());
+        return res;
+
+
+    }
+    
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return queue.isEmpty();
+    }
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
+ 
+ 
+法二：两个队列转换的时刻非常巧妙！ 解题关键在于：在添加进元素之前就已经将顺序变为后进先出了！理解！
+class MyStack {
+    Queue<Integer> queue1=new LinkedList<>();
+    Queue<Integer> queue2=new LinkedList<>();
+    /** Initialize your data structure here. */
+    public MyStack() {
+
+    }
+    
+    /** Push element x onto stack. */
+    public void push(int x) {
+        queue1To2();
+        queue1.offer(x);
+        queue2To1();
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        return queue1.poll();
+
+    }
+    
+    /** Get the top element. */
+    public int top() {
+        return queue1.peek();
+    }
+
+    void queue1To2(){
+        if(queue2.isEmpty()){
+            while(!queue1.isEmpty()){
+                queue2.offer(queue1.poll());
+            }
+        }
+    }
+    void queue2To1(){
+        while(!queue2.isEmpty()){
+            queue1.offer(queue2.poll());
+        }
+    }
+    
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return queue1.isEmpty();
+    }
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
