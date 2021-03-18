@@ -1,0 +1,80 @@
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+ 
+示例 1：
+输入：s = "()"
+输出：true
+
+示例 2：
+输入：s = "()[]{}"
+输出：true
+
+示例 3：
+输入：s = "(]"
+输出：false
+
+示例 4：
+输入：s = "([)]"
+输出：false
+
+示例 5：
+输入：s = "{[]}"
+输出：true
+ 
+提示：
+
+1 <= s.length <= 104
+s 仅由括号 '()[]{}' 组成
+
+法一：性能稍差  时间消耗比法二多
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack=new Stack<>();
+        char[] chars=s.toCharArray();
+        for(int i=0;i<chars.length;i++){
+            if(stack.isEmpty()){
+                stack.push(chars[i]);
+            }else{
+                char top=stack.peek();
+                boolean a= top=='(' && chars[i]==')';
+                boolean b= top=='{' && chars[i]=='}';
+                boolean c= top=='[' && chars[i]==']';
+                boolean flag=a || b ||c;
+                if(flag){
+                    stack.pop();
+                }else{
+                    stack.push(chars[i]);
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+}
+
+法二：优化后
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack=new Stack<>();
+        char[] chars=s.toCharArray();
+        for(char c:chars){
+            if(c=='(' || c=='{' || c=='['){   //！优化方向：从判断括号是正括号'(' 、'{' 、'['   还是反括号')'、'}'、']'入手  在判断途中有无效的情况立即return false  时间消耗减少
+                stack.push(c);
+            }else{
+                if(stack.isEmpty()){
+                    return false;
+                }else{
+                    char top=stack.pop();
+                    boolean b1= top=='(' && c==')';
+                    boolean b2= top=='{' && c=='}';
+                    boolean b3= top=='[' && c==']';
+                    if(!(b1 || b2 || b3)) return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+}
