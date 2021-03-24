@@ -1,0 +1,34 @@
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+
+示例 1:
+输入: s = "anagram", t = "nagaram"
+输出: true
+
+示例 2:
+输入: s = "rat", t = "car"
+输出: false
+
+说明:
+你可以假设字符串只包含小写字母。
+
+//优化关键：此题用数组来记录每个字母出现的次数比用HashMap的时间消耗和内存消耗更小！
+//小技巧：用字母之间的ascill码的大小差异来对应数组索引！
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length()!=t.length()) return false;
+        int[] charFindCount=new int[26];
+        for(char c:s.toCharArray()){
+            int index=c-'a';
+            charFindCount[index]++;
+        }
+        for(char c:t.toCharArray()){
+            int index=c-'a';
+            charFindCount[index]--;
+        }
+        for(int count:charFindCount){
+            if(count!=0) return false;
+        }
+        return true;
+    }
+}
