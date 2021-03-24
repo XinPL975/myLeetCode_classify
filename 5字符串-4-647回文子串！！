@@ -1,0 +1,64 @@
+给定一个字符串，你的任务是计算这个字符串中有多少个回文子串。
+
+具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。
+
+示例 1：
+输入："abc"
+输出：3
+解释：三个回文子串: "a", "b", "c"
+
+示例 2：
+输入："aaa"
+输出：6
+解释：6个回文子串: "a", "a", "a", "aa", "aa", "aaa"
+
+法一：暴力解法 很容易想到的思路 但是时间消耗和内存消耗太大  不推荐
+class Solution {
+    public int countSubstrings(String s) {
+        int res=0;
+        for(int i=0;i<s.length();i++){
+            res++;
+            if(check(s.substring(i)) && i!=s.length()-1) res++;
+            for(int j=i+2;j<s.length();j++){
+                if(check(s.substring(i,j))) res++;
+            }
+        }
+        return res;
+    }
+    boolean check(String s){
+        char[] chars=s.toCharArray();
+        int size=chars.length;
+        for(int i=0;i<size/2;i++){
+            if(chars[i]!=chars[size-1-i]) return false;
+        }
+        return true;
+    }
+}
+
+
+法二：思路清奇的解法！！非常妙！多理解！！
+解题思路：以字符串的每一位为中心，尝试着去扩展子字符串，因为回文字符串的特点就是关于中心字符相等！
+
+class Solution {
+    int count=0;
+    public int countSubstrings(String s) {
+        for(int i=0;i<s.length();i++){
+            extendsString(s, i, i);
+            extendsString(s, i, i+1);
+        }
+        return count;
+    }
+
+    void extendsString(String s,int start,int end){
+        while(start>=0 && end<s.length() && s.charAt(start)==s.charAt(end)){
+            count++;
+            start--;
+            end++;
+        }
+    }
+}
+
+
+
+
+
