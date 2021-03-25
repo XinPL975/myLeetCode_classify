@@ -1,0 +1,45 @@
+给定一个字符串 s，计算具有相同数量 0 和 1 的非空（连续）子字符串的数量，并且这些子字符串中的所有 0 和所有 1 都是连续的。
+
+重复出现的子串要计算它们出现的次数。
+
+示例 1 :
+输入: "00110011"
+输出: 6
+解释: 有6个子串具有相同数量的连续1和0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
+
+请注意，一些重复出现的子串要计算它们出现的次数。
+
+另外，“00110011”不是有效的子串，因为所有的0（和1）没有组合在一起。
+
+示例 2 :
+输入: "10101"
+输出: 4
+解释: 有4个子串：“10”，“01”，“10”，“01”，它们具有相同数量的连续1和0。
+ 
+提示：
+
+s.length 在1到50,000之间。
+s 只包含“0”或“1”字符。
+
+解题思路：观察到符合条件的字串类似于回文子串 以两个不相等的中心字符向两边扩展 分别等于左右两个不相等的中心字符！
+
+class Solution {
+    int count=0;
+    public int countBinarySubstrings(String s) {
+        char[] charS=s.toCharArray();           //优化关键：  将字符串化为字符数组 并传入check函数
+        for(int i=0;i<charS.length-1;i++){
+            check(charS,i,i+1);
+        }
+        return count;
+    }
+
+    void check(char[] charS,int start,int end){
+        char c1=charS[start],c2=charS[end];
+        if(c1==c2) return;
+        while(start>=0 && end<charS.length && charS[start]==c1 && charS[end]==c2){
+            count++;
+            start--;
+            end++;
+        }
+    }
+}
