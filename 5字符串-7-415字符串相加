@@ -1,0 +1,31 @@
+给定两个字符串形式的非负整数 num1 和num2 ，计算它们的和。
+
+提示：
+
+num1 和num2 的长度都小于 5100
+num1 和num2 都只包含数字 0-9
+num1 和num2 都不包含任何前导零
+你不能使用任何內建 BigInteger 库， 也不能直接将输入的字符串转换为整数形式
+
+注意：题目要求返回的是String类型！！
+解题思路：按位相加考虑进位
+关键：使用可变的StringBuffer，在其末尾用append()方法加入结果（注意此时结果是倒置的！！）  一定要记得最后使用reverse()将其倒转过来！
+
+class Solution {
+    public String addStrings(String num1, String num2) {
+        char[] char1=num1.toCharArray();
+        char[] char2=num2.toCharArray();
+        int i=char1.length-1,j=char2.length-1;
+        int carry=0;
+        StringBuffer reverseRes=new StringBuffer();
+        while(i>=0 || j>=0 || carry!=0){
+            int a= i>=0?char1[i--]-'0':0;      优化关键一：不使用包装类的parseInt()方法（效率较低）  而使用char-'0'来将其转化为各个数字！！ 巧妙！  （注意此时char为char类型的数字）
+            int b= j>=0?char2[j--]-'0':0;      优化关键二：数组同步使用i--、j--
+            int sum=a+b+carry;
+            reverseRes.append(sum%10);
+            carry=sum/10;
+      
+        }
+        return new String(reverseRes.reverse());
+    }
+}
