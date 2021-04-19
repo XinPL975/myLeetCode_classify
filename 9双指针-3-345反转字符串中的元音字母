@@ -1,0 +1,46 @@
+编写一个函数，以字符串作为输入，反转该字符串中的元音字母。
+
+示例 1：
+输入："hello"
+输出："holle"
+
+示例 2：
+输入："leetcode"
+输出："leotcede"
+ 
+提示：
+
+元音字母不包含字母 "y" 。
+
+解题关键！！
+1.知道元音字母是哪些：'a','o','i','e','u','A','O','I','E','U'
+2.HashSet初始化的方式！用数组转换为集合再用构造器的方式！！
+Set<Character> set=new HashSet<>(Arrays.asList('a','o','i','e','u','A','O','I','E','U'));
+
+
+class Solution {
+    public String reverseVowels(String s) {
+        if(s==null) return null;
+        Set<Character> set=new HashSet<>(Arrays.asList('a','o','i','e','u','A','O','I','E','U'));
+        int i=0,j=s.length()-1;
+        char[] charS=s.toCharArray();
+        while(i<j){
+            char a=charS[i],b=charS[j];
+            if(!set.contains(a)) i++;
+            if(!set.contains(b)) j--;
+            if(set.contains(a) && set.contains(b)){
+                swap(i,j,charS);
+                i++;
+                j--;
+            }
+        }
+        return new String(charS);
+
+    }
+
+    public void swap(int i,int j,char[] charS){
+        char temp=charS[i];
+        charS[i]=charS[j];
+        charS[j]=temp;
+    }
+}
