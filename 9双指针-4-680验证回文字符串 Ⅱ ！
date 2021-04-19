@@ -1,0 +1,39 @@
+给定一个非空字符串 s，最多删除一个字符。判断是否能成为回文字符串。
+
+示例 1:
+输入: "aba"
+输出: True
+
+示例 2:
+输入: "abca"
+输出: True
+解释: 你可以删除c字符。
+
+注意:
+
+字符串只包含从 a-z 的小写字母。字符串的最大长度是50000。
+
+解题关键：判断是否为回文字符串关注点在于对应字符是否相等 若不等直接返回false
+         判断是否可以最多删除一个字符成为字符串时，如果出现两个指针指向的字符不相等的情况，就试着删除一个字符，再判断删除完之后的字符串是否是回文字符串。
+优化关键一：直接对整个字符串进行双指针遍历判断对应字符是否相等（不需要单独判断整个字符串！！）
+优化关键二：若遍历到有对应字符不相等的情况，则既可以删除左指针指向的字符，也可以删除右指针指向的字符，调用方法判断中间部分的字符串是否是回文字符串
+
+class Solution {
+    public boolean validPalindrome(String s) {
+    for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+        if (s.charAt(i) != s.charAt(j)) {
+            return isPalindrome(s, i, j - 1) || isPalindrome(s, i + 1, j);
+        }
+    }
+    return true;
+}
+
+private boolean isPalindrome(String s, int i, int j) {
+    while (i < j) {
+        if (s.charAt(i++) != s.charAt(j--)) {
+            return false;
+        }
+    }
+    return true;
+}
+}
