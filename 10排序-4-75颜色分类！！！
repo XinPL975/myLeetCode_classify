@@ -1,0 +1,68 @@
+给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+
+此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+
+示例 1：
+输入：nums = [2,0,2,1,1,0]
+输出：[0,0,1,1,2,2]
+
+示例 2：
+输入：nums = [2,0,1]
+输出：[0,1,2]
+
+示例 3：
+输入：nums = [0]
+输出：[0]
+
+示例 4：
+输入：nums = [1]
+输出：[1]
+ 
+提示：
+
+n == nums.length
+1 <= n <= 300
+nums[i] 为 0、1 或 2
+ 
+进阶：
+
+你可以不使用代码库中的排序函数来解决这道题吗？
+你能想出一个仅使用常数空间的一趟扫描算法吗？
+
+法一：使用代码库中的排序函数
+class Solution {
+    public void sortColors(int[] nums) {
+        Arrays.sort(nums);
+    }
+}
+
+法二：好难 需要多理解！
+思路：
+考虑使用三指针方法，使用指针head来交换0，tail来交换2。此时，head的初始值为 0，tail的初始值为 n-1。
+在遍历的过程中，需要找出所有的0交换至数组的头部，并且找出所有的2交换至数组的尾部。
+如果找到了 0 将其与head进行交换，并将head向后移动一个位置；
+如果找到了 2，那么将其与tail进行交换，值得注意的是：当我们找到2时，需要不断地比较nums[p2]的值，直到新的nums[i] 不为2且不为0。
+              若nums[i] 为 0，那么对应着第一种情况；如果 nums[i] 为 1，那么就不需要进行任何后续的操作。
+
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int head=0,tail=nums.length-1;
+        int index=0;
+        while(index<=tail){
+            if(nums[index]==0){
+                swap(nums,head++,index++);
+            }else if(nums[index]==2){
+                swap(nums,index,tail--);
+            }else{
+                index++;
+            }
+        }
+    }
+
+    public void swap(int[] nums,int i,int j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
+    }
+}
