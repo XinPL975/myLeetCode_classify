@@ -40,7 +40,8 @@ letters长度范围在[2, 10000]区间内。
 letters 仅由小写字母组成，最少包含两个不同的字母。
 目标字母target 是一个小写字母。
 
-法一：好理解 先处理特殊情况！！！
+法一：好理解 
+解题思路：先处理特殊情况！！！如果找不到letters 中大于 target 的最小字符就返回第 1 个字符！！
 class Solution {
     public char nextGreatestLetter(char[] letters, char target) {
         if(letters[letters.length-1]<=target) return letters[0];   //注意这里要用小于等于<=！！
