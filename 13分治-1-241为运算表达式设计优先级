@@ -1,0 +1,58 @@
+给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
+
+示例 1:
+输入: "2-1-1"
+输出: [0, 2]
+解释: 
+((2-1)-1) = 0 
+(2-(1-1)) = 2
+
+示例 2:
+输入: "2*3-4*5"
+输出: [-34, -14, -10, -10, 10]
+解释: 
+(2*(3-(4*5))) = -34 
+((2*3)-(4*5)) = -14 
+((2*(3-4))*5) = -10 
+(2*((3-4)*5)) = -10 
+(((2*3)-4)*5) = 10
+
+解题思路：分治！！！
+1.遍历字符串
+2.遇到操作符，就将左右两边的字符串，分别当作两个表达式
+3.将左右两个表达式进行递归得到左右两个结果的集合
+4.遍历左右结果集合，根据符号字符进行运算
+
+class Solution {
+    public List<Integer> diffWaysToCompute(String expression) {
+        List<Integer> res=new ArrayList<>();
+        if(expression==null || expression.length()==0) return res;
+        for(int i=0;i<expression.length();i++){
+            char c=expression.charAt(i);
+            if(c=='+' || c=='-' || c=='*'){
+                List<Integer> leftList=diffWaysToCompute(expression.substring(0, i));
+                List<Integer> rightList=diffWaysToCompute(expression.substring(i+1));
+                for(int left:leftList){
+                    for(int right:rightList){
+                        switch (c){            //注意switch-case的语法！！太久没用容易混淆！！switch(c)要加小括号且没有冒号！！
+                            case '+':{
+                                res.add(left+right);
+                                break;
+                            }
+                            case '-':{
+                                res.add(left-right);
+                                break;
+                            }
+                            case '*':{
+                                res.add(left*right);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(res.isEmpty()) res.add(Integer.valueOf(expression));    //不要忘记这一步！！如果没有运算符则当前字符串可转为数字！！
+        return res;
+    }
+}
