@@ -1,0 +1,50 @@
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+0-9分别是:  "","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"
+
+示例 1：
+输入：digits = "23"
+输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+示例 2：
+输入：digits = ""
+输出：[]
+
+示例 3：
+输入：digits = "2"
+输出：["a","b","c"]
+
+解题关键：
+1.数字与字母的对应关系：数字-字符串-字母
+2.判断回溯停止的结束条件：这里是从0开始建立一个索引  一次指向题目给出字符串digits中的每个字母   当索引走完每个字母后即回溯停止
+3.回溯技巧：StringBuilder temp=new StringBuilder()
+4.StringBuilder的删除：delete和deleteCharAt
+
+
+class Solution {
+    private String[] numToAlphabet={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    private List<String> res=new ArrayList<>();
+
+    public List<String> letterCombinations(String digits) {
+        if(digits==null || digits.length()==0) return res;
+        int size=digits.length();
+        StringBuilder temp=new StringBuilder();
+        backTracking(0, size, temp, digits);
+        return res;
+
+    }
+
+    public void backTracking(int index,int size,StringBuilder temp,String digits){
+        if(index==size){
+            res.add(temp.toString());
+            return;
+        }
+        int num=digits.charAt(index)-'0';     //这个方式比Integer.parseInt(digits.charAt(index)+"")快很多！！
+        for(char c:numToAlphabet[num].toCharArray()){
+            temp.append(c);
+            backTracking(index+1, size, temp, digits);
+            temp.deleteCharAt(temp.length()-1);
+        }
+
+    }
+}
