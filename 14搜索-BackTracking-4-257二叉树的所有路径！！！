@@ -1,0 +1,48 @@
+给定一个二叉树，返回所有从根节点到叶子节点的路径。
+说明: 叶子节点是指没有子节点的节点。
+
+示例:
+输入:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+输出: ["1->2->5", "1->3"]
+
+解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+
+关键难点：
+需要将节点的左右子节点均进入递归，在这个过程中回溯使字符串退回到原始起点是重难点！
+
+解题关键：
+1.使用String和StringBuilder相互转换！非常巧妙！
+2.每次送入递归的都为String字符串 由于其不可变性不会影响平行的左右子节点递归！！！重点！！
+3.在递归方法内再将String转换为StringBuilder进行字符串添加后缀
+
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res=new ArrayList<>();
+        if(root==null) return res;
+        String temp="";
+        backTracking(temp,root,res);
+        return res;
+
+    }
+
+    public void backTracking(String temp,TreeNode node,List<String> res){
+        if(node==null) return;
+        StringBuilder tempSb=new StringBuilder(temp);
+        tempSb.append(node.val);
+        if(node.left==null && node.right==null){
+            res.add(tempSb.toString());
+            return;
+        }
+        tempSb.append("->");
+        backTracking(tempSb.toString(),node.left,res);
+        backTracking(tempSb.toString(), node.right, res);
+
+    }
+}
