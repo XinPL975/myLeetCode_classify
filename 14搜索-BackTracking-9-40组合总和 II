@@ -1,0 +1,62 @@
+给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+candidates 中的每个数字在每个组合中只能使用一次。
+说明：
+所有数字（包括目标数）都是正整数。
+解集不能包含重复的组合。 
+
+示例 1:
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+所求解集为:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+示例 2:
+输入: candidates = [2,5,2,1,2], target = 5,
+所求解集为:
+[
+  [1,2,2],
+  [5]
+]
+
+解题关键：题目要求繁杂 需要一条一条对应解决
+1.candidates 中的每个数字在每个组合中只能使用一次-----设置boolean[]数组做标记！
+2.解集不能包含重复的组合 ----- 设置每次从start开始搜索！
+3.数组含有重复元素（重点）----- 额外判断！  if(i>0 && candidates[i-1]==num && !visited[i-1]) continue;
+
+class Solution {
+    private List<List<Integer>> res=new ArrayList<>();
+    private int n;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        if(candidates==null || candidates.length==0) return res;
+        n=candidates.length;
+        boolean[] visited=new boolean[n];
+        Arrays.sort(candidates);
+        List<Integer> path=new ArrayList<>();
+        backTracking(0, path, candidates, target, visited);
+        return res;
+
+    }
+
+    public void backTracking(int start,List<Integer> path,int[] candidates,int target,boolean[] visited){
+        if(target==0){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i=start;i<n;i++){
+            if(visited[i]) continue;
+            int num=candidates[i];
+            if(num>target) continue;
+            if(i>0 && candidates[i-1]==num && !visited[i-1]) continue;
+            path.add(num);
+            visited[i]=true;
+            backTracking(i, path, candidates, target-num, visited);
+            path.remove(path.size()-1);
+            visited[i]=false;
+        }
+    }
+}
