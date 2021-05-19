@@ -1,0 +1,50 @@
+给你一个字符串 s，请你将 s 分割成一些子串，使每个子串都是 回文串 。返回 s 所有可能的分割方案。
+回文串 是正着读和反着读都一样的字符串。
+
+示例 1：
+输入：s = "aab"
+输出：[["a","a","b"],["aa","b"]]
+
+示例 2：
+输入：s = "a"
+输出：[["a"]]
+ 
+提示：
+1 <= s.length <= 16
+s 仅由小写英文字母组成
+
+class Solution {
+    private List<List<String>> res=new ArrayList<>();
+    private int n;
+    public List<List<String>> partition(String s) {
+        if(s==null || s.length()==0) return res;
+        n=s.length();
+        List<String> path=new ArrayList<>();
+        backTracking(0, path, s);
+        return res;
+    }
+
+    public void backTracking(int start,List<String> path,String s){
+        if(start==n){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i=start;i<n;i++){
+            String temp=s.substring(start, i+1);
+            if(isPalindrome(temp)){
+                path.add(temp);
+                backTracking(i+1, path, s);
+                path.remove(path.size()-1);
+            }
+        }
+    }
+
+    public boolean isPalindrome(String str){
+        int start=0;
+        int end=str.length()-1;
+        while(start<end){
+            if(str.charAt(start++)!=str.charAt(end--)) return false;    //不要忘记start++ end--  ！！！细节！！
+        }
+        return true;
+    }
+}
