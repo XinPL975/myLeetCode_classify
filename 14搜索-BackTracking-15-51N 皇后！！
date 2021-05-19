@@ -1,0 +1,65 @@
+n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。
+
+每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+
+示例 1：
+输入：n = 4
+输出：[[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+解释：如上图所示，4 皇后问题存在两个不同的解法。
+
+示例 2：
+输入：n = 1
+输出：[["Q"]]
+ 
+提示：
+1 <= n <= 9
+皇后彼此不能相互攻击，也就是说：任何两个皇后都不能处于同一条横行、纵行或斜线上。
+
+解题关键：
+1.和数独区分开来 回溯算法不需要返回boolean！！因为有多种解答 而数独只有一种！
+2.如何标记45度斜线和135度斜线
+
+class Solution {
+    private List<List<String>> res=new ArrayList<>();
+    private boolean[] columnVisited;
+    private boolean[]angle45Visited;
+    private boolean[] angle135Visited;
+    public List<List<String>> solveNQueens(int n) {
+        if(n<=0) return res;
+        columnVisited=new boolean[n];
+        angle45Visited=new boolean[2*n-1];
+        angle135Visited=new boolean[2*n-1];
+        char[][] board=new char[n][n];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                board[i][j]='.';
+            }
+        }
+        backTracking(0, n,board);
+        return res;
+
+
+    }
+
+    public void backTracking(int row,int n,char[][] board){
+        if(row==n) {
+            List<String> path=new ArrayList<>();
+            for(int i=0;i<n;i++){
+                String str=new String(board[i]);
+                path.add(str);
+            }
+            res.add(path);
+            return;
+        }
+        for(int col=0;col<n;col++){
+            if(columnVisited[col] || angle45Visited[row+col] || angle135Visited[n-1-(col-row)]) continue;  //关键代码！angle45Visited[row+col] || angle135Visited[n-1-(col-row)]
+            board[row][col]='Q';
+            columnVisited[col] = angle45Visited[row+col] = angle135Visited[n-1-(col-row)]=true;
+            backTracking(row+1, n,board);
+            board[row][col]='.';
+            columnVisited[col] = angle45Visited[row+col] = angle135Visited[n-1-(col-row)]=false;
+        }
+    }
+}
