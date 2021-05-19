@@ -1,0 +1,48 @@
+给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的子集（幂集）。
+
+解集 不能 包含重复的子集。返回的解集中，子集可以按 任意顺序 排列。
+
+示例 1：
+输入：nums = [1,2,2]
+输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
+
+示例 2：
+输入：nums = [0]
+输出：[[],[0]]
+ 
+提示：
+1 <= nums.length <= 10
+-10 <= nums[i] <= 10
+
+class Solution {
+    private List<List<Integer>> res=new ArrayList<>();
+    private int n;
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        res.add(new ArrayList<>());
+        if(nums==null || nums.length==0) return res;
+        n=nums.length;
+        Arrays.sort(nums);
+        boolean[] visited=new boolean[n];
+        List<Integer> path=new ArrayList<>();
+        for(int i=1;i<=n;i++){
+            backTracking(0, i, path, nums, visited);
+        }
+        return res;
+    }
+
+    public void backTracking(int start,int count,List<Integer> path,int[] nums,boolean[] visited){
+        if(path.size()==count){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i=start;i<n;i++){
+            if(i>0 && nums[i]==nums[i-1] && !visited[i-1]) continue;
+            path.add(nums[i]);
+            visited[i]=true;
+            backTracking(i+1, count, path, nums, visited);
+            visited[i]=false;
+            path.remove(path.size()-1);
+
+        }
+    }
+}
