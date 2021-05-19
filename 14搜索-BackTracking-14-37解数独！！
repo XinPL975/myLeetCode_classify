@@ -1,0 +1,69 @@
+编写一个程序，通过填充空格来解决数独问题。
+
+数独的解法需 遵循如下规则：
+
+数字 1-9 在每一行只能出现一次。
+数字 1-9 在每一列只能出现一次。
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。（请参考示例图）
+数独部分空格内已填入了数字，空白格用 '.' 表示。
+
+提示：
+board.length == 9
+board[i].length == 9
+board[i][j] 是一位数字或者 '.'
+题目数据 保证 输入数独仅有一个解
+
+解题关键：
+1.如何判断遍历停止（row、column的关系）
+2.细节：int转换为char： (char)(n+'0')
+3.如何判断数独成功 要将回溯算法函数返回boolean  加以判断！！！重点！！！
+
+class Solution {
+    private boolean[][] rowVisited=new boolean[9][10];
+    private boolean[][] columnVisited=new boolean[9][10];
+    private boolean[][] blockVisited=new boolean[9][10];
+
+    public void solveSudoku(char[][] board) {
+        if(board==null || board.length==0) return;
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j]=='.') continue;
+                int num=board[i][j]-'0';
+                rowVisited[i][num]=true;
+                columnVisited[j][num]=true;
+                blockVisited[getBlock(i, j)][num]=true;
+            }
+        }
+        backTracking(0, 0, board);
+        return;
+
+    }
+
+    public boolean backTracking(int row,int column,char[][] board){         //关键：回溯算法返回boolean！！判断是否成功！！
+        if(column==9){        //关键：如何判断停止！
+            column=0;
+            row=row+1;
+            if(row==9) return true;
+        }
+        if(board[row][column]=='.'){
+            for(int i=1;i<=9;i++){
+                if(rowVisited[row][i] || columnVisited[column][i] || blockVisited[getBlock(row, column)][i]) continue;
+                board[row][column]=(char)(i+'0');    //细节：int转换为char！！！
+                rowVisited[row][i]= columnVisited[column][i]=blockVisited[getBlock(row, column)][i]=true;
+                if(backTracking(row, column+1, board)) return true;
+                board[row][column]='.';
+                rowVisited[row][i]= columnVisited[column][i]=blockVisited[getBlock(row, column)][i]=false;
+            }
+        }else{
+            return backTracking(row, column+1, board);
+        }
+        return false;
+        
+    }
+
+    public int getBlock(int i,int j){
+        i=i/3;
+        j=j/3;
+        return i*3+j;
+    }
+}
