@@ -1,0 +1,57 @@
+给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+
+示例 1：
+输入：nums = [1,5,11,5]
+输出：true
+解释：数组可以分割成 [1, 5, 5] 和 [11] 。
+
+示例 2：
+输入：nums = [1,2,3,5]
+输出：false
+解释：数组不能分割成两个元素和相等的子集。
+
+解题思路：可以看成一个背包大小为 sum/2 的 0-1 背包问题。
+
+法一
+class Solution {
+    public boolean canPartition(int[] nums) {
+        if(nums==null || nums.length==0) return true;
+        int n=nums.length;
+        int sum=0;
+        for(int num:nums){
+            sum +=num;
+        }
+        if(sum%2!=0) return false;
+        int w=sum/2;
+        boolean[] dp=new boolean[w+1];
+        dp[0]=true;            //重点！！！不要忘记初始化！！！
+        for(int i=0;i<n;i++){
+            for(int j=w;j>=1;j--){
+                if(nums[i]>j) continue;
+                dp[j]=dp[j] || dp[j-nums[i]];
+            }
+        }
+        return dp[w];
+    }
+}
+
+法二：优化
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+            sum +=nums[i];
+        }
+        if(sum%2!=0) return false;
+        int w=sum/2;
+        boolean[] dp=new boolean[w+1];
+        dp[0]=true;
+        for(int i=0;i<n;i++){
+            for(int j=w;j>=nums[i];j--){              //优化关键：直接将j>=nums[i]写进循环条件 就不需要额外判断了！！
+                dp[j]=dp[j] || dp[j-nums[i]];
+            }
+        }
+        return dp[w];
+    }
+}
