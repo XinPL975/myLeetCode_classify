@@ -34,6 +34,6 @@ class Solution {
             slow=slow.next;
         }
         slow.next=slow.next.next;
-        return prev.next;
+        return prev.next;     //关键！！注意这里不要返回head 因为会出现一个节点 删除一个的情况！！
     }
 }
